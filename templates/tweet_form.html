@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}
+{% if form.instance.pk %}Edit Tweet{% else %}Create Tweet{% endif %}
+{% endblock title %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 600px;">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">
+                {% if form.instance.pk %}
+                    Edit Tweet
+                {% else %}
+                    Create Tweet
+                {% endif %}
+            </h3>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary w-100 mt-2">
+                    {% if form.instance.pk %}Update{% else %}Submit{% endif %}
+                </button>
+            </form>
+            <a href="{% url 'tweet_list' %}" class="btn btn-secondary w-100 mt-3">
+                &larr; Back to Home
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} {% extends 'base.html' %}
+{% block title %}
+Home Page
+{% endblock title %}
+
+{% block content %}
+
+<h1>welocme to django blog app</h1>
+<h2>
+    {% if form.instance.pk %}
+    Edit Tweet
+    {% else %}
+    Create Tweet
+    {% endif %}
+    <form method="post" enctype="multipart/form-data" class="form">
+        {% csrf_token %}
+        {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+      <a href="{% url 'tweet_list' %}" class="btn btn-secondary mt-3">
+        &larr; Back to Home
+      </a>
+</h2>
+ 
+{% endblock content %} {% endcomment %}
