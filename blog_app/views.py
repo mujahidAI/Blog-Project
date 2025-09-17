@@ -1,10 +1,11 @@
 # Remove unused imports
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .models import Tweet
+from .models import Tweet, BlogPost
 from .forms import TweetForm , UserCreationForm, UserRegistrationForm
 from django.contrib.auth.decorators import login_required 
-from django.contrib.auth import login 
+from django.contrib.auth import login
+from django.db.models import Q 
     # NOTE: The following section is related to security and authentication.
 # The @login_required decorator is used to restrict access to a view so that only authenticated users can access it.
 # If a user who is not logged in tries to access a view decorated with @login_required, they will be redirected to the login page.
@@ -80,5 +81,40 @@ def register(request):
     else:
         form =UserRegistrationForm()
     return render(request, "registration/register.html", {'form': form}) 
- 
+
+# ===========================
+# ==== SEARCH FUNCTIONALITY ====
+# ===========================
+
+def advanced_search(query):
+    if query:
+        q_objects = Q(title__icontains=query) | Q(content__icontains=query)
+        return BlogPost.objects.filter(q_objects)
+    else:
+        return BlogPost.objects.none()  # Return empty queryset if no query
+
+def search_view(request):
+    query = request.GET.get('q', '')
+    results = []
+    
+    if query:
+        # Search in BlogPost model
+        blog_results = advanced_search(query)
+        # Also search in Tweet model for title and content
+        tweet_results = Tweet.objects.filter(
+            Q(title__icontains=query) | Q(content__icontains=query) | Q(text__icontains=query)
+        )
+        results = {
+            'blog_posts': blog_results,
+            'tweets': tweet_results,
+            'query': query
+        }
+    else:
+        results = {
+            'blog_posts': BlogPost.objects.none(),
+            'tweets': Tweet.objects.none(),
+            'query': ''
+        }
+    
+    return render(request, 'search_results.html', results)
 

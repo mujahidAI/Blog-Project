@@ -11,13 +11,24 @@ Home Page
 <div class="container row gap-3">
     {% for tweet in tweets %}
     <div class="card" style="width: 18rem;">
-        <img src="{{tweet.photo.url}}" class="card-img-top" alt="...">
+        {% if tweet.photo %}
+        <img src="{{tweet.photo.url}}" class="card-img-top" alt="Tweet image" style="height: 200px; object-fit: cover;">
+        {% endif %}
         <div class="card-body">
           <h5 class="card-title">{{ tweet.user.username }}</h5>
+          {% if tweet.title %}
+          <h6 class="card-subtitle mb-2 text-primary">{{ tweet.title }}</h6>
+          {% endif %}
           <p class="card-text">{{ tweet.text }}</p>
+          {% if tweet.content %}
+          <p class="card-text text-muted small">{{ tweet.content|truncatewords:15 }}</p>
+          {% endif %}
+          <small class="text-muted">{{ tweet.created_at|date:"M d, Y H:i" }}</small>
           {% if tweet.user == user %}
-          <a href="{% url 'tweet_edit' tweet.id %}" class="btn btn-primary">Edit</a>
-          <a href="{% url 'tweet_delete' tweet.id %}" class="btn btn-danger">Delete</a>
+          <div class="mt-2">
+            <a href="{% url 'tweet_edit' tweet.id %}" class="btn btn-primary btn-sm">Edit</a>
+            <a href="{% url 'tweet_delete' tweet.id %}" class="btn btn-danger btn-sm">Delete</a>
+          </div>
           {% endif %}
         </div>
       </div>

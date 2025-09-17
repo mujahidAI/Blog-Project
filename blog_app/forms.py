@@ -6,7 +6,12 @@ from django.contrib.auth.models import User
 class TweetForm(forms.ModelForm):
     class Meta:
         model = Tweet
-        fields = ['text', 'photo']
+        fields = ['title', 'text', 'content', 'photo']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Optional title'}),
+            'text': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Tweet text', 'rows': 3}),
+            'content': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Optional detailed content', 'rows': 4}),
+        }
  
 
 class UserRegistrationForm(UserCreationForm):
